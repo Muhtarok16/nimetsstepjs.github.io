@@ -280,15 +280,15 @@ data.forEach((element) => {
 };
 
 // PRELOADER ------------------------------------------------------------------------
-const pageWrapper = document.querySelector(".page-main");
-const preLoader = `<div class="lds-ring"><div></div><div></div><div></div><div></div></div>`;
-	console.log(pageWrapper);
-	pageWrapper.insertAdjacentHTML("afterend", preLoader);
+// const pageWrapper = document.querySelector(".page-main");
+// const preLoader = `<div class="lds-ring"><div></div><div></div><div></div><div></div></div>`;
+// 	console.log(pageWrapper);
+// 	pageWrapper.insertAdjacentHTML("afterend", preLoader);
 
 // setTimeout(renderCard, 2000, DATA);
 
 
-
+// Filter FUNCTION ------------------------------------------------------------------------
 const applyFilters = () => {
     const direction = document.querySelector('input[name="direction"]:checked').id;
     const category = document.querySelector('input[name="category"]:checked').id;
@@ -320,7 +320,7 @@ filtersForm.addEventListener('submit', (event) => {
 	
     // applySorting(document.querySelector('.sorting__btn--active'));
 	trainerContainers.innerHTML = "";
-	setTimeout(renderCard, 2000, filteredData1);
+	setTimeout(renderCard, 10, filteredData1);
     // renderCard(filteredData1);
 });
 
@@ -330,7 +330,7 @@ const sidebarView = document.querySelector(".sidebar");
 
 sortingView.hidden = false;
 sidebarView.hidden = false;
-
+showPreloader();
 
 
 
@@ -361,6 +361,8 @@ const enableScroll = () => {   //врубаю скрол при закритті
 
 const showModalButton = document.querySelector(".trainers-cards__container");
 const modalContainer = document.createElement("div");
+
+// MODAL WINDOW ------------------------------------------------------------------------
 
 showModalButton.addEventListener("click", (event) => {
 
@@ -412,8 +414,13 @@ showModalButton.addEventListener("click", (event) => {
 		modalContainer.append(modalWindowClone);
 		disableScroll();
 
+		const modal = modalContainer.querySelector(".modal");
+		const modalBody = modalContainer.querySelector(".modal__body");
+		console.log(modal);
+
 		if (modalContainer.className === "modal-window-container") {
 			const closeModalButton = document.querySelector(".modal__close");
+			const generalClose = document.querySelector(".modal");
 			// const closeModalGeneralArea = document.querySelector(".page-wrapper");
 
 			closeModalButton.addEventListener("click", (event) => {
@@ -424,11 +431,25 @@ showModalButton.addEventListener("click", (event) => {
 				enableScroll();
 				targetButtonTrainderCard.classList.remove("active-modal-card");
 			});
+
+			generalClose.addEventListener("click", function (event) {
+				if (event.target !== modalBody && event.target !== document.querySelector(".modal__description") && event.target !== document.querySelector(".modal__body>img") && event.currentTarget === modal) {
+					console.log(event.currentTarget);
+					console.log(event.target);
+				modalContainer.innerHTML = ""; //прибираю дітей створеного клона модального вікна
+				modalContainer.remove(); //видаляю вікно
+				targetButton.classList.remove("active"); //видаляю тег активної кнопки
+				enableScroll();
+				targetButtonTrainderCard.classList.remove("active-modal-card");
+				};
+			}, true);
 		};
+
 	};
 
 });
 
+// SORTING ------------------------------------------------------------------------
 
 const sortingSection = document.querySelector(".sorting");
 const sortButton = document.querySelectorAll(".sorting__btn");
@@ -486,10 +507,10 @@ document.addEventListener("DOMContentLoaded", () => { //функція для о
     function saveFilters () {
 		// const savedSortingButton = document.querySelector(".sorting__btn");
 
-		localStorage.getItem("filteredSafe");
-		console.log(localStorage.getItem("filteredSafe"));
-		let filteredDataJSONParsed = JSON.parse(localStorage.getItem("filteredSafe"));
-		console.log(filteredDataJSONParsed);
+		// localStorage.getItem("filteredSafe");
+		// console.log(localStorage.getItem("filteredSafe"));
+		// let filteredDataJSONParsed = JSON.parse(localStorage.getItem("filteredSafe"));
+		// console.log(filteredDataJSONParsed);
 		// console.log(filteredDataJSONParsed);
 
 
@@ -500,12 +521,28 @@ document.addEventListener("DOMContentLoaded", () => { //функція для о
 			};
 		});
 
-		const sortedDataSaved = sortData(localStorage.getItem("sortedSafe"), filteredDataJSONParsed);
+		const sortedDataSaved = sortData(localStorage.getItem("sortedSafe"), filteredData1);
 		renderCard(sortedDataSaved);
     //renderCard(localStorage.getItem("sortedSafe"));
     };
     saveFilters();
 });
+
+
+
+// PRELOADER ------------------------------------------------------------------------
+function showPreloader() {
+    window.addEventListener('load', () => {
+        const header = document.querySelector(".page-header");
+        const preloaderHTML = '<div id="preloader"><img src="./img/preloader2.gif" alt="Loading..."></div>';
+        header.insertAdjacentHTML('afterend', preloaderHTML);
+        const preloaderElement = document.querySelector("#preloader");
+
+        setTimeout(() => {
+            preloaderElement.style.display = 'none';
+        }, 2000);
+    });
+}
 
 
 // let json = JSON.stringify(student);
